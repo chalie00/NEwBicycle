@@ -20,7 +20,7 @@ class MainView: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     
-    private lazy var viewModel = ViewModel()
+    var viewModel = ViewModel()
     let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
@@ -29,16 +29,18 @@ class MainView: UIViewController {
         startTxtFld.delegate = self
         endTxtFld.delegate = self
         
+        searchBtnPressed()
         
     }
     
     
-    //Serarch Button
-    func serarchBtnPressed() {
+    //Search Button
+    func searchBtnPressed() {
+        print("pressed")
         searchBtn.rx.tap
-            .subscribe(onNext: {[weak self] in
+            .subscribe(onNext: { [weak self] in
                 print("Search Button Pressed")
-                
+                self!.viewModel.getCoordinate(address: self!.startTxtFld.text!, separate: "Start")
             })
             .disposed(by: disposeBag)
     }
@@ -50,5 +52,16 @@ class MainView: UIViewController {
 }//End Of The Class
 
 extension MainView: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if (self.startTxtFld.isFirstResponder || self.endTxtFld.isFirstResponder) {
+            self.startTxtFld.resignFirstResponder()
+            self.endTxtFld.resignFirstResponder()
+        }
+    }
     
 }

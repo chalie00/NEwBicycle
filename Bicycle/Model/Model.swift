@@ -10,17 +10,18 @@ import RxSwift
 import RxCocoa
 import MapKit
 
-protocol ModelProtocol {
-    func getPinData(address: String?) -> MKPointAnnotation
-}
-
 class Model {
     
-    let startPin: MKPointAnnotation?
-    let endPin: MKPointAnnotation?
-    
-    init(start: MKPointAnnotation, end: MKPointAnnotation) {
-        self.startPin = start
-        self.endPin = end
+    private let startPin = PublishSubject<MKPointAnnotation>()
+    var startPinObs: Observable<MKPointAnnotation> {
+        return startPin
     }
-}
+    
+    private let endPin = PublishSubject<MKPointAnnotation>()
+    var endPinObs: Observable<MKPointAnnotation> {
+        return endPin
+    }
+    
+    
+}//End Of The Class
+
