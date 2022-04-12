@@ -49,6 +49,7 @@ class MainView: UIViewController, MKMapViewDelegate {
     
     //Start_End TxtFld Observable
     func txtFldObservable() {
+        mapView.userTrackingMode = .none
         let scheduler = ConcurrentDispatchQueueScheduler(qos: .default)
         
         startTxtFld.rx.text.orEmpty
@@ -218,8 +219,8 @@ extension MainView: UITextFieldDelegate {
 
 extension MainView: CLLocationManagerDelegate {
     
-    //    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-    //        mapView.userTrackingMode = .follow
-    //    }
+        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            mapView.userTrackingMode = .follow
+        }
     
 }
