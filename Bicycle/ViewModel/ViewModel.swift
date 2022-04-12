@@ -12,38 +12,42 @@ import MapKit
 
 class ViewModel {
     
+    let disposeBag = DisposeBag()
+    
     private let model = Model()
     
-    private let startTxtSub = PublishSubject<String>()
-    var startTxt: Observable<String> {
-        return startTxtSub
+    private let startCoord = PublishSubject<[CLLocationDegrees]>()
+    var startCoordinate: Observable<[CLLocationDegrees]> {
+        return startCoord
     }
     
-    private let endTxtSub = PublishSubject<String>()
-    var endTxt: Observable<String> {
-        return endTxtSub
+    private let endCoord = PublishSubject<[CLLocationDegrees]>()
+    var endCoordinate: Observable<[CLLocationDegrees]> {
+        return endCoord
     }
     
     //Get Coordinate from String Address
     func getCoordinate(address: String, separate: String) {
-        let addressStr = address
         var longitude: CLLocationDegrees!
         var latitude: CLLocationDegrees!
         let geoCoder = CLGeocoder()
         
-        geoCoder.geocodeAddressString(addressStr) { [self]
+        geoCoder.geocodeAddressString(address) { [weak self]
             marks, error in
             if let mark = marks?.first?.location?.coordinate {
                 longitude = mark.longitude
                 latitude = mark.latitude
-                print("lon: \(String(describing: longitude)) , lat: \(String(describing: latitude))")
+                
                 if separate == "Start" {
-                    startTxtSub.onNext(address)
+                    self!.startCoord.onNext([longitude, latitude])
+                } else if separate == "End" {
+                    self!.endCoord.onNext([longitude, latitude])
                 }
+            } else {
+                print("Geocode Error:\(error.customMirror)")
             }
         }
     }
-    
-    
 }//End Of The Class
+
 

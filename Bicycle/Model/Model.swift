@@ -22,6 +22,27 @@ class Model {
         return endPin
     }
     
+    private let startCoordinate = PublishSubject<CLLocationCoordinate2D>()
+    var startCoorObs: Observable<CLLocationCoordinate2D> {
+        return startCoordinate
+    }
+    
+    private let endCoordinate = PublishSubject<CLLocationCoordinate2D>()
+    var endCoorObs: Observable<CLLocationCoordinate2D> {
+        return endCoordinate
+    }
+    
+    //Generate Annotation
+    func generateAnnotation(lon: CLLocationDegrees, lat: CLLocationDegrees, separate: String) {
+        let annotation = MKPointAnnotation()
+        
+        if separate == "Start" {
+            annotation.coordinate = CLLocationCoordinate2D(latitude: lon, longitude: lat)
+            startPin.onNext(annotation)
+            print(startPinObs)
+        }
+    }
+    
     
 }//End Of The Class
 
